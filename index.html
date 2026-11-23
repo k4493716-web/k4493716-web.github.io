@@ -1,1 +1,699 @@
-<meta http-equiv="refresh" content="0; url=https://github.io">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Messenger</title>
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3/dist/dexie.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Формы входа и регистрации */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 400px;
+        }
+
+        .auth-box h2 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Кнопка показать/скрыть пароль */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .password-toggle:hover {
+            color: #333;
+        }
+
+        .input-group input[type="password"],
+        .input-group input[type="text"].password-input {
+            padding-right: 45px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f2f5;
+        }
+
+        /* Интерфейс чата */
+        .chat-container {
+            display: none;
+            height: 100vh;
+            flex-direction: row;
+        }
+
+        .chat-container.active {
+            display: flex;
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #ee5a6f;
+        }
+
+        .search-box {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .dialogs-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .dialog-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dialog-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dialog-item.active {
+            background: #e3f2fd;
+        }
+
+        .dialog-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .dialog-last-message {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Область чата */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f0f2f5;
+        }
+
+        .empty-chat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .chat-header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h4 {
+            color: #333;
+            font-size: 18px;
+        }
+
+        /* Кнопка удалить чат */
+        .delete-chat-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            transition: background 0.2s;
+        }
+
+        .delete-chat-btn:hover {
+            background: #ee5a6f;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.sent {
+            align-items: flex-end;
+        }
+
+        .message.received {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.sent .message-bubble {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .input-area {
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .input-area button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .input-area button:hover {
+            background: #5568d3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран входа -->
+    <div id="loginScreen" class="auth-container">
+        <div class="auth-box">
+            <h2>Вход в Pulse</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="loginUsername" placeholder="Имя пользователя" required>
+                </div>
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" class="password-input" placeholder="Пароль" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegister()">Регистрация</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Экран регистрации -->
+    <div id="registerScreen" class="auth-container hidden">
+        <div class="auth-box">
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <input type="text" id="registerUsername" placeholder="Имя пользователя" required>
+                </div>
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input type="password" id="registerPassword" class="password-input" placeholder="Пароль" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">👁️</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input type="password" id="registerPasswordConfirm" class="password-input" placeholder="Повторите пароль" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('registerPasswordConfirm')">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                <button type="button" class="btn btn-secondary" onclick="showLogin()">Уже есть аккаунт</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Интерфейс чата -->
+    <div id="chatScreen" class="chat-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3 id="currentUserName">Пользователь</h3>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchUsers" placeholder="Поиск пользователей..." onkeyup="searchUsers()">
+            </div>
+            <div class="dialogs-list" id="dialogsList"></div>
+        </div>
+
+        <div class="chat-area">
+            <div class="empty-chat" id="emptyChat">
+                Выберите диалог для начала общения
+            </div>
+            <div id="activeChat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="chat-header">
+                    <h4 id="activeChatName">Имя собеседника</h4>
+                    <button class="delete-chat-btn" onclick="deleteChat()" title="Удалить чат">🗑️</button>
+                </div>
+                <div class="messages-area" id="messagesArea"></div>
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Введите сообщение..." onkeypress="handleMessageKeyPress(event)">
+                    <button onclick="sendMessage()">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация базы данных
+        const db = new Dexie('PulseMessenger');
+        db.version(1).stores({
+            users: '++id, username, password',
+            messages: '++id, fromUser, toUser, text, timestamp'
+        });
+
+        let currentUser = null;
+        let activeDialog = null;
+
+        // Функция переключения видимости пароля
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Показать экран регистрации
+        function showRegister() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.remove('hidden');
+        }
+
+        // Показать экран входа
+        function showLogin() {
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        // Регистрация
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('Пароли не совпадают!');
+                return;
+            }
+
+            const existingUser = await db.users.where('username').equals(username).first();
+            if (existingUser) {
+                alert('Пользователь с таким именем уже существует!');
+                return;
+            }
+
+            await db.users.add({ username, password });
+            alert('Регистрация успешна! Теперь войдите в систему.');
+            showLogin();
+            document.getElementById('registerForm').reset();
+        });
+
+        // Вход
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const user = await db.users.where('username').equals(username).first();
+
+            if (!user || user.password !== password) {
+                alert('Неверное имя пользователя или пароль!');
+                return;
+            }
+
+            currentUser = user;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('chatScreen').classList.add('active');
+            document.getElementById('currentUserName').textContent = user.username;
+            document.getElementById('loginForm').reset();
+
+            await loadDialogs();
+        });
+
+        // Выход
+        function logout() {
+            currentUser = null;
+            activeDialog = null;
+            document.getElementById('chatScreen').classList.remove('active');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('activeChat').classList.add('hidden');
+            document.getElementById('emptyChat').style.display = 'flex';
+        }
+
+        // Загрузка списка диалогов
+        async function loadDialogs() {
+            const messages = await db.messages
+                .where('fromUser').equals(currentUser.username)
+                .or('toUser').equals(currentUser.username)
+                .toArray();
+
+            const dialogsMap = new Map();
+
+            messages.forEach(msg => {
+                const otherUser = msg.fromUser === currentUser.username ? msg.toUser : msg.fromUser;
+
+                if (!dialogsMap.has(otherUser)) {
+                    dialogsMap.set(otherUser, {
+                        username: otherUser,
+                        lastMessage: msg.text,
+                        timestamp: msg.timestamp
+                    });
+                } else {
+                    const existing = dialogsMap.get(otherUser);
+                    if (msg.timestamp > existing.timestamp) {
+                        existing.lastMessage = msg.text;
+                        existing.timestamp = msg.timestamp;
+                    }
+                }
+            });
+
+            const dialogs = Array.from(dialogsMap.values())
+                .sort((a, b) => b.timestamp - a.timestamp);
+
+            renderDialogs(dialogs);
+        }
+
+        // Отрисовка списка диалогов
+        function renderDialogs(dialogs) {
+            const dialogsList = document.getElementById('dialogsList');
+            dialogsList.innerHTML = '';
+
+            dialogs.forEach(dialog => {
+                const div = document.createElement('div');
+                div.className = 'dialog-item';
+                if (activeDialog === dialog.username) {
+                    div.classList.add('active');
+                }
+                div.innerHTML = `
+                    <div class="dialog-name">${dialog.username}</div>
+                    <div class="dialog-last-message">${dialog.lastMessage}</div>
+                `;
+                div.onclick = () => openDialog(dialog.username);
+                dialogsList.appendChild(div);
+            });
+        }
+
+        // Поиск пользователей
+        async function searchUsers() {
+            const query = document.getElementById('searchUsers').value.trim().toLowerCase();
+
+            if (!query) {
+                await loadDialogs();
+                return;
+            }
+
+            const users = await db.users.toArray();
+            const dialogUsers = users
+                .filter(u => u.username !== currentUser.username && u.username.toLowerCase().includes(query))
+                .map(u => ({ username: u.username, lastMessage: 'Начните переписку', timestamp: 0 }));
+
+            renderDialogs(dialogUsers);
+        }
+
+        // Открытие диалога
+        async function openDialog(username) {
+            activeDialog = username;
+            document.getElementById('emptyChat').style.display = 'none';
+            document.getElementById('activeChat').classList.remove('hidden');
+            document.getElementById('activeChatName').textContent = username;
+
+            await loadMessages();
+            await loadDialogs();
+        }
+
+        // Загрузка сообщений
+        async function loadMessages() {
+            const messages = await db.messages
+                .filter(msg =>
+                    (msg.fromUser === currentUser.username && msg.toUser === activeDialog) ||
+                    (msg.fromUser === activeDialog && msg.toUser === currentUser.username)
+                )
+                .toArray();
+
+            messages.sort((a, b) => a.timestamp - b.timestamp);
+
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = '';
+
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `message ${msg.fromUser === currentUser.username ? 'sent' : 'received'}`;
+
+                const time = new Date(msg.timestamp).toLocaleTimeString('ru-RU', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                div.innerHTML = `
+                    <div class="message-bubble">${msg.text}</div>
+                    <div class="message-time">${time}</div>
+                `;
+                messagesArea.appendChild(div);
+            });
+
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        // Отправка сообщения
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+
+            if (!text || !activeDialog) return;
+
+            await db.messages.add({
+                fromUser: currentUser.username,
+                toUser: activeDialog,
+                text: text,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+            await loadMessages();
+            await loadDialogs();
+        }
+
+        // Обработка Enter для отправки сообщения
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Удаление чата
+        async function deleteChat() {
+            if (!activeDialog) return;
+
+            const confirmed = confirm('Удалить всю переписку с этим пользователем?');
+            if (!confirmed) return;
+
+            // Удаляем все сообщения между текущим пользователем и собеседником
+            await db.messages
+                .filter(msg =>
+                    (msg.fromUser === currentUser.username && msg.toUser === activeDialog) ||
+                    (msg.fromUser === activeDialog && msg.toUser === currentUser.username)
+                )
+                .delete();
+
+            // Очищаем окно переписки
+            document.getElementById('messagesArea').innerHTML = '';
+
+            // Закрываем чат
+            activeDialog = null;
+            document.getElementById('activeChat').classList.add('hidden');
+            document.getElementById('emptyChat').style.display = 'flex';
+
+            // Обновляем список диалогов
+            await loadDialogs();
+        }
+
+        // Инициализация тестовых данных
+        async function initTestData() {
+            const count = await db.users.count();
+            if (count === 0) {
+                await db.users.bulkAdd([
+                    { username: 'alice', password: '123' },
+                    { username: 'bob', password: '123' },
+                    { username: 'charlie', password: '123' }
+                ]);
+            }
+        }
+
+        // Запуск приложения
+        initTestData();
+    </script>
+</body>
+</html>
