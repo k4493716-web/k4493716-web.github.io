@@ -241,6 +241,12 @@
         .chat-header h4 {
             color: #333;
             font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .chat-header h4:hover {
+            color: #667eea;
         }
 
         /* Кнопка удалить чат */
@@ -338,6 +344,311 @@
         .hidden {
             display: none;
         }
+
+        /* Кнопка профиля */
+        .profile-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .profile-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Модальное окно профиля */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: white;
+        }
+
+        .profile-banner-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+        }
+
+        .profile-banner,
+        .preview-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-banner-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 5;
+        }
+
+        .profile-banner-container:hover .change-banner-btn {
+            opacity: 1;
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: -60px auto 0;
+            background: #e0e0e0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .profile-avatar,
+        .preview-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: white;
+            font-size: 14px;
+        }
+
+        .profile-avatar-container:hover .change-avatar-overlay {
+            opacity: 1;
+        }
+
+        .profile-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .profile-username {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .settings-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .settings-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Модальное окно настроек */
+        .settings-modal .modal-content {
+            width: 600px;
+        }
+
+        .settings-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .settings-header h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .settings-body {
+            padding: 20px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .position-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .position-control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .position-control label {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .position-control input[type="range"] {
+            width: 100%;
+        }
+
+        .preview-container {
+            margin-top: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .preview-banner {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: -40px auto 20px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .preview-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .settings-footer {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-save {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-save:hover {
+            background: #5568d3;
+        }
+
+        /* Скрытые инпуты для файлов */
+        .file-input-hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -392,7 +703,10 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3 id="currentUserName">Пользователь</h3>
-                <button class="logout-btn" onclick="logout()">Выйти</button>
+                <div>
+                    <button class="profile-btn" onclick="openMyProfile()">Профиль</button>
+                    <button class="logout-btn" onclick="logout()">Выйти</button>
+                </div>
             </div>
             <div class="search-box">
                 <input type="text" id="searchUsers" placeholder="Поиск пользователей..." onkeyup="searchUsers()">
@@ -406,7 +720,7 @@
             </div>
             <div id="activeChat" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
                 <div class="chat-header">
-                    <h4 id="activeChatName">Имя собеседника</h4>
+                    <h4 id="activeChatName" onclick="openActiveUserProfile()" title="Посмотреть профиль">Имя собеседника</h4>
                     <button class="delete-chat-btn" onclick="deleteChat()" title="Удалить чат">🗑️</button>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
@@ -418,16 +732,118 @@
         </div>
     </div>
 
+    <!-- Модальное окно профиля -->
+    <div id="profileModal" class="modal-overlay" onclick="closeModalOnOverlay(event, 'profileModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeProfileModal()">✕</button>
+            <div class="profile-banner-container">
+                <img id="profileBanner" class="profile-banner" style="display: none;">
+                <button class="change-banner-btn" id="changeBannerBtn" onclick="selectBanner()" style="display: none;">
+                    📷 Изменить фон
+                </button>
+            </div>
+            <div class="profile-avatar-container" id="avatarContainer">
+                <img id="profileAvatar" class="profile-avatar" style="display: none;">
+                <div class="change-avatar-overlay" id="changeAvatarOverlay" style="display: none;">
+                    📷 Изменить
+                </div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-username" id="profileUsername">Имя пользователя</div>
+                <div class="profile-actions" id="profileActions">
+                    <button class="settings-btn" onclick="openSettings()">⚙️ Настройки</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal-overlay settings-modal" onclick="closeModalOnOverlay(event, 'settingsModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeSettingsModal()">✕</button>
+            <div class="settings-header">
+                <h3>⚙️ Настройки профиля</h3>
+            </div>
+            <div class="settings-body">
+                <div class="settings-section">
+                    <h4>Расположение фона профиля</h4>
+                    <div class="position-controls">
+                        <div class="position-control">
+                            <label>
+                                <span>Горизонталь (X)</span>
+                                <span id="bannerXValue">50%</span>
+                            </label>
+                            <input type="range" id="bannerXSlider" min="0" max="100" value="50" oninput="updateBannerPosition()">
+                        </div>
+                        <div class="position-control">
+                            <label>
+                                <span>Вертикаль (Y)</span>
+                                <span id="bannerYValue">50%</span>
+                            </label>
+                            <input type="range" id="bannerYSlider" min="0" max="100" value="50" oninput="updateBannerPosition()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>Расположение фото профиля</h4>
+                    <div class="position-controls">
+                        <div class="position-control">
+                            <label>
+                                <span>Горизонталь (X)</span>
+                                <span id="avatarXValue">50%</span>
+                            </label>
+                            <input type="range" id="avatarXSlider" min="0" max="100" value="50" oninput="updateAvatarPosition()">
+                        </div>
+                        <div class="position-control">
+                            <label>
+                                <span>Вертикаль (Y)</span>
+                                <span id="avatarYValue">50%</span>
+                            </label>
+                            <input type="range" id="avatarYSlider" min="0" max="100" value="50" oninput="updateAvatarPosition()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>Предпросмотр</h4>
+                    <div class="preview-container">
+                        <div class="preview-banner">
+                            <img id="previewBanner" style="display: none;">
+                        </div>
+                        <div class="preview-avatar">
+                            <img id="previewAvatar" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button class="btn-cancel" onclick="closeSettingsModal()">Отмена</button>
+                <button class="btn-save" onclick="saveSettings()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрытые инпуты для загрузки файлов -->
+    <input type="file" id="avatarInput" class="file-input-hidden" accept="image/*" onchange="handleAvatarChange(event)">
+    <input type="file" id="bannerInput" class="file-input-hidden" accept="image/*" onchange="handleBannerChange(event)">
+
     <script>
         // Инициализация базы данных
         const db = new Dexie('PulseMessenger');
-        db.version(1).stores({
+        db.version(2).stores({
             users: '++id, username, password',
-            messages: '++id, fromUser, toUser, text, timestamp'
+            messages: '++id, fromUser, toUser, text, timestamp',
+            profiles: 'username, avatar, banner, avatar_pos, banner_pos'
         });
 
         let currentUser = null;
         let activeDialog = null;
+        let currentProfileUser = null;
+        let tempAvatar = null;
+        let tempBanner = null;
+        let tempAvatarPos = '50% 50%';
+        let tempBannerPos = '50% 50%';
 
         // Функция переключения видимости пароля
         function togglePassword(inputId) {
@@ -678,6 +1094,287 @@
 
             // Обновляем список диалогов
             await loadDialogs();
+        }
+
+        // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+
+        // Закрыть модальное окно при клике вне окна
+        function closeModalOnOverlay(event, modalId) {
+            if (event.target.id === modalId) {
+                if (modalId === 'profileModal') {
+                    closeProfileModal();
+                } else if (modalId === 'settingsModal') {
+                    closeSettingsModal();
+                }
+            }
+        }
+
+        // ===== ФУНКЦИИ ПРОФИЛЯ =====
+
+        // Открыть свой профиль
+        async function openMyProfile() {
+            await openUserProfile(currentUser.username, true);
+        }
+
+        // Открыть профиль активного собеседника
+        async function openActiveUserProfile() {
+            if (activeDialog) {
+                await openUserProfile(activeDialog, false);
+            }
+        }
+
+        // Открыть профиль пользователя
+        async function openUserProfile(username, isOwnProfile = false) {
+            currentProfileUser = username;
+
+            // Показать/скрыть кнопки редактирования
+            document.getElementById('changeBannerBtn').style.display = isOwnProfile ? 'flex' : 'none';
+            document.getElementById('changeAvatarOverlay').style.display = isOwnProfile ? 'flex' : 'none';
+            document.getElementById('profileActions').style.display = isOwnProfile ? 'block' : 'none';
+
+            // Установить обработчик клика на аватар только для своего профиля
+            const avatarContainer = document.getElementById('avatarContainer');
+            if (isOwnProfile) {
+                avatarContainer.style.cursor = 'pointer';
+                avatarContainer.onclick = selectAvatar;
+            } else {
+                avatarContainer.style.cursor = 'default';
+                avatarContainer.onclick = null;
+            }
+
+            // Загрузить профиль
+            await loadProfile(username);
+
+            // Показать модальное окно
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        // Загрузить профиль из базы данных
+        async function loadProfile(username) {
+            document.getElementById('profileUsername').textContent = username;
+
+            const profile = await db.profiles.get(username);
+
+            const bannerImg = document.getElementById('profileBanner');
+            const avatarImg = document.getElementById('profileAvatar');
+
+            if (profile) {
+                // Загрузить фон
+                if (profile.banner) {
+                    bannerImg.src = profile.banner;
+                    bannerImg.style.display = 'block';
+                    bannerImg.style.objectPosition = profile.banner_pos || '50% 50%';
+                } else {
+                    bannerImg.style.display = 'none';
+                }
+
+                // Загрузить аватар
+                if (profile.avatar) {
+                    avatarImg.src = profile.avatar;
+                    avatarImg.style.display = 'block';
+                    avatarImg.style.objectPosition = profile.avatar_pos || '50% 50%';
+                } else {
+                    avatarImg.style.display = 'none';
+                }
+            } else {
+                bannerImg.style.display = 'none';
+                avatarImg.style.display = 'none';
+            }
+        }
+
+        // Закрыть модальное окно профиля
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+            currentProfileUser = null;
+        }
+
+        // Выбрать аватар
+        function selectAvatar() {
+            const input = document.getElementById('avatarInput');
+            input.value = ''; // Сбросить значение для возможности повторного выбора того же файла
+            input.click();
+        }
+
+        // Выбрать фон
+        function selectBanner() {
+            const input = document.getElementById('bannerInput');
+            input.value = ''; // Сбросить значение для возможности повторного выбора того же файла
+            input.click();
+        }
+
+        // Обработать изменение аватара
+        async function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                tempAvatar = e.target.result;
+
+                // Обновить аватар в профиле
+                const avatarImg = document.getElementById('profileAvatar');
+                avatarImg.src = tempAvatar;
+                avatarImg.style.display = 'block';
+
+                // Сохранить в базу данных
+                await saveProfileImage('avatar', tempAvatar);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Обработать изменение фона
+        async function handleBannerChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                tempBanner = e.target.result;
+
+                // Обновить фон в профиле
+                const bannerImg = document.getElementById('profileBanner');
+                bannerImg.src = tempBanner;
+                bannerImg.style.display = 'block';
+
+                // Сохранить в базу данных
+                await saveProfileImage('banner', tempBanner);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Сохранить изображение профиля
+        async function saveProfileImage(type, data) {
+            const profile = await db.profiles.get(currentUser.username) || {
+                username: currentUser.username,
+                avatar: null,
+                banner: null,
+                avatar_pos: '50% 50%',
+                banner_pos: '50% 50%'
+            };
+
+            if (type === 'avatar') {
+                profile.avatar = data;
+            } else if (type === 'banner') {
+                profile.banner = data;
+            }
+
+            await db.profiles.put(profile);
+        }
+
+        // ===== ФУНКЦИИ НАСТРОЕК =====
+
+        // Открыть настройки
+        async function openSettings() {
+            const profile = await db.profiles.get(currentUser.username) || {
+                avatar_pos: '50% 50%',
+                banner_pos: '50% 50%'
+            };
+
+            // Загрузить текущие позиции
+            const [bannerX, bannerY] = (profile.banner_pos || '50% 50%').split(' ').map(v => parseInt(v));
+            const [avatarX, avatarY] = (profile.avatar_pos || '50% 50%').split(' ').map(v => parseInt(v));
+
+            document.getElementById('bannerXSlider').value = bannerX;
+            document.getElementById('bannerYSlider').value = bannerY;
+            document.getElementById('avatarXSlider').value = avatarX;
+            document.getElementById('avatarYSlider').value = avatarY;
+
+            tempBannerPos = profile.banner_pos || '50% 50%';
+            tempAvatarPos = profile.avatar_pos || '50% 50%';
+
+            // Обновить превью
+            const previewBanner = document.getElementById('previewBanner');
+            const previewAvatar = document.getElementById('previewAvatar');
+            const profileBanner = document.getElementById('profileBanner');
+            const profileAvatar = document.getElementById('profileAvatar');
+
+            if (profileBanner.src && profileBanner.style.display !== 'none') {
+                previewBanner.src = profileBanner.src;
+                previewBanner.style.display = 'block';
+                previewBanner.style.objectPosition = tempBannerPos;
+            } else {
+                previewBanner.style.display = 'none';
+            }
+
+            if (profileAvatar.src && profileAvatar.style.display !== 'none') {
+                previewAvatar.src = profileAvatar.src;
+                previewAvatar.style.display = 'block';
+                previewAvatar.style.objectPosition = tempAvatarPos;
+            } else {
+                previewAvatar.style.display = 'none';
+            }
+
+            updateBannerPosition();
+            updateAvatarPosition();
+
+            // Показать модальное окно настроек
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        // Закрыть настройки
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // Обновить позицию фона
+        function updateBannerPosition() {
+            const x = document.getElementById('bannerXSlider').value;
+            const y = document.getElementById('bannerYSlider').value;
+
+            document.getElementById('bannerXValue').textContent = `${x}%`;
+            document.getElementById('bannerYValue').textContent = `${y}%`;
+
+            tempBannerPos = `${x}% ${y}%`;
+
+            const previewBanner = document.getElementById('previewBanner');
+            if (previewBanner.style.display !== 'none') {
+                previewBanner.style.objectPosition = tempBannerPos;
+            }
+        }
+
+        // Обновить позицию аватара
+        function updateAvatarPosition() {
+            const x = document.getElementById('avatarXSlider').value;
+            const y = document.getElementById('avatarYSlider').value;
+
+            document.getElementById('avatarXValue').textContent = `${x}%`;
+            document.getElementById('avatarYValue').textContent = `${y}%`;
+
+            tempAvatarPos = `${x}% ${y}%`;
+
+            const previewAvatar = document.getElementById('previewAvatar');
+            if (previewAvatar.style.display !== 'none') {
+                previewAvatar.style.objectPosition = tempAvatarPos;
+            }
+        }
+
+        // Сохранить настройки
+        async function saveSettings() {
+            const profile = await db.profiles.get(currentUser.username) || {
+                username: currentUser.username,
+                avatar: null,
+                banner: null
+            };
+
+            profile.avatar_pos = tempAvatarPos;
+            profile.banner_pos = tempBannerPos;
+
+            await db.profiles.put(profile);
+
+            // Применить к текущему профилю
+            const profileBanner = document.getElementById('profileBanner');
+            const profileAvatar = document.getElementById('profileAvatar');
+
+            if (profileBanner.style.display !== 'none') {
+                profileBanner.style.objectPosition = tempBannerPos;
+            }
+
+            if (profileAvatar.style.display !== 'none') {
+                profileAvatar.style.objectPosition = tempAvatarPos;
+            }
+
+            closeSettingsModal();
+            alert('Настройки сохранены!');
         }
 
         // Инициализация тестовых данных
