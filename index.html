@@ -736,9 +736,9 @@
     <div id="profileModal" class="modal-overlay" onclick="closeModalOnOverlay(event, 'profileModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeProfileModal()">✕</button>
-            <div class="profile-banner-container">
+            <div class="profile-banner-container" onclick="if(document.getElementById('changeBannerBtn').style.display !== 'none') { document.getElementById('bannerInput').value=''; document.getElementById('bannerInput').click(); }" style="position: relative; z-index: 1;">
                 <img id="profileBanner" class="profile-banner" style="display: none;">
-                <button class="change-banner-btn" id="changeBannerBtn" onclick="selectBanner()" style="display: none;">
+                <button class="change-banner-btn" id="changeBannerBtn" onclick="event.stopPropagation(); document.getElementById('bannerInput').value=''; document.getElementById('bannerInput').click();" style="display: none; position: relative; z-index: 20;">
                     📷 Изменить фон
                 </button>
             </div>
